@@ -7,6 +7,12 @@ exports.validateImage = function (value) {
       throw new Error("Property image can't be greater then 5");
     } else {
       let isImage = true
+      if(value['property_pics[]'] && value['property_pics[]'].length == undefined) {
+        let extension = (path.extname(value['property_pics[]'].name)).toLowerCase();
+        if (extension != '.jpg' && extension != '.jpeg' && extension != '.png') {
+          isImage = false
+        }
+      }
       for (i = 0; i < value['property_pics[]'].length; i++) {
         let extension = (path.extname(value['property_pics[]'][i].name)).toLowerCase();
         if (extension != '.jpg' && extension != '.jpeg' && extension != '.png') {

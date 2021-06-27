@@ -85,49 +85,7 @@ exports.findAll = async (req, res) => {
         })
         propertyData.rows[i].dataValues.propertyPics = propertyPics 
     }
-    let recentProduct = await RecentProducts.findAll({
-        limit: 5,
-        order: [
-            ['last_visited', 'DESC'],
-        ],
-    })
-
-    if(recentProduct.length == 0) {
-        recentProduct = await Properties.findAll({
-            limit: 5,
-            order: [
-                ['createdAt', 'DESC'],
-            ],
-        })
-        for( let i=0; i < recentProduct.length; i++ ) {
-            let propertyPics = await PropertyPics.findAll({ 
-                attributes: ['id', 'image_path', 'thumbnail_path'],
-                where: {property_id: recentProduct[i].dataValues.id}
-            })
-            recentProduct[i].dataValues.propertyPics = propertyPics 
-        }
-    } else {
-        let propertyId = []
-        for( let i=0; i < recentProduct.length; i++ ) {
-            propertyId.push(recentProduct[i].dataValues.property_id) 
-        }
-        recentProduct = await Properties.findAll({
-            where: {
-                id: { [Op.in]:propertyId }
-            },
-            order: [
-                ['createdAt', 'DESC'],
-            ],
-        })
-        for( let i=0; i < recentProduct.length; i++ ) {
-            let propertyPics = await PropertyPics.findAll({ 
-                attributes: ['id', 'image_path', 'thumbnail_path'],
-                where: {property_id: recentProduct[i].dataValues.id}
-            })
-            recentProduct[i].dataValues.propertyPics = propertyPics 
-        }
-    }
-    res.json({ data: { propertyData, recentProduct  }})
+    res.json({ data: { propertyData  }})
   } catch(err) {
     res.json(err)
   }
